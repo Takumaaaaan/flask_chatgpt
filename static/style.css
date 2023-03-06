@@ -13,6 +13,24 @@
     justify-content: space-between;
   }
 
+.icon{
+  width: 45px; height: 100%;
+}
+
+.gpt_message{
+  border-radius: 15px;
+  background-color: rgba(57, 192, 237,.2);
+}
+
+.user_message{
+  border-radius: 15px;
+  background-color: #fbfbfb;
+}
+
+.chat_title{
+  font-size: 24px;
+}
+
 #chat1 .form-outline .form-control~.form-notch div {
     pointer-events: none;
     border: 1px solid;
