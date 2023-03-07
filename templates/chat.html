@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{%- block content %}
+{% block content %}
 <div class="container py-5">
   <div class="row d-flex justify-content-center">
     <div class="col-md-12 col-lg-12 col-xl-12">
@@ -21,14 +21,14 @@
           {% if loop.index % 2 == 1  %}
           <div class="d-flex flex-row justify-content-end mb-4">
             <div class="p-3 me-3 border user_message">
-              <p class="middle mb-0">{{message}}</p>
+              <p class="middle mb-0">{{message|safe}}</p>
             </div>
           </div>
           {% else %}
           <div class="d-flex flex-row justify-content-start mb-4">
             <img src="/static/yiso.png" alt="avatar 1" class="icon">
             <div class="p-3 ms-3 gpt_message">
-              <p class="middle mb-0">{{message}}</p>
+              <p class="middle mb-0">{{message|safe}}</p>
             </div>
           </div>
           {% endif %}
@@ -49,4 +49,4 @@
     </div>
   </div>
 </div>
-{%- endblock %}
+{% endblock %}

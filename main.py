@@ -10,7 +10,7 @@ API_KEY = os.getenv('API_KEY')
 app = Flask(__name__, static_folder='./static')
 
 app.secret_key = os.getenv('SECRET_KEY')
-app.permanent_session_lifetime = timedelta(minutes=15)
+app.permanent_session_lifetime = timedelta(minutes=30)
 
 def completion(new_message_text:str, settings_text:str = '', past_messages:list = []):
     openai.api_key = API_KEY
@@ -25,9 +25,12 @@ def completion(new_message_text:str, settings_text:str = '', past_messages:list 
         messages=past_messages
     )
     response_message = {"role": "assistant", "content": result.choices[0].message.content}
+    
     past_messages.append(response_message)
     response_message_text = result.choices[0].message.content
+    
     return response_message_text, past_messages
+
 
 @app.route('/reload/', methods=['GET'])
 def reload():
@@ -39,11 +42,12 @@ def reload():
 
 @app.route('/chat/', methods=['GET',"POST"])
 def chat():
-    if request.method == "GET":
-        if "all_messages" not in session:
+    if "all_messages" not in session:
             session["all_messages"] = []
-        if "past_messages" not in session:
-            session["past_messages"] = []
+    if "past_messages" not in session:
+        session["past_messages"] = []
+
+    if request.method == "GET":
         print(session["all_messages"])
         print(session["past_messages"])
         return render_template('chat.html')#, message=message)
@@ -52,6 +56,10 @@ def chat():
         past_messages = session["past_messages"]
         message = request.form['message']
         response,past_messages = completion(message,settings_text="",past_messages=past_messages)
+
+        response = response.replace("\n","<br>\n")
+        message = message.replace("\n","<br>\n")
+
         all_messages.append(message)
         all_messages.append(response)
         print(message,response)
@@ -67,5 +75,5 @@ def toppage():
     return redirect("/chat/")
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    app.run(debug=True, host='0.0.0.0', port=5002)
 
