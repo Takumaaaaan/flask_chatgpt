@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request, session, redirect
 from datetime import timedelta
 import openai
 from dotenv import load_dotenv
+
 load_dotenv()
 # 環境変数を参照
 import os
@@ -35,7 +36,7 @@ def completion(new_message_text:str, settings_text:str = '', past_messages:list 
 @app.route('/reload/', methods=['GET'])
 def reload():
     if "all_messages" in session:
-            session["all_messages"] = []
+        session["all_messages"] = []
     if "past_messages" in session:
         session["past_messages"] = []
     return redirect("/chat/")
@@ -57,8 +58,8 @@ def chat():
         message = request.form['message']
         response,past_messages = completion(message,settings_text="",past_messages=past_messages)
 
-        response = response.replace("\n","<br>\n")
-        message = message.replace("\n","<br>\n")
+        response = response.strip().replace("\n","<br>\n")
+        message = message.strip().replace("\n","<br>\n")
 
         all_messages.append(message)
         all_messages.append(response)
@@ -75,5 +76,5 @@ def toppage():
     return redirect("/chat/")
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5002)
+    app.run(debug=True, host='0.0.0.0', port=5003)
 
