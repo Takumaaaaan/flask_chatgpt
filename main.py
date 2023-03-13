@@ -59,8 +59,8 @@ def translate_text(text:str,target_lang:str):
         translator = deepl.Translator(DEEPL_API_KEY,proxy=os.environ['https_proxy'])
     else:
         translator = deepl.Translator(DEEPL_API_KEY)
-    print(text)
-    print(target_lang)
+    # print(text)
+    # print(target_lang)
     result = translator.translate_text(text=text,target_lang=target_lang)
     return result.text
 
@@ -193,8 +193,8 @@ def chat():
 
         all_messages.append(message)
         all_messages.append(response)
-        print(message,response)
-        print(past_messages)
+        # print(message,response)
+        # print(past_messages)
         session["all_messages"] = all_messages
         session["past_messages"] = past_messages
         return render_template('chat.html', messages=all_messages,mode="通常モード")
@@ -225,8 +225,8 @@ def chat_menter():
 
         all_messages.append(message)
         all_messages.append(response)
-        print(message,response)
-        print(past_messages)
+        # print(message,response)
+        # print(past_messages)
         session["all_messages"] = all_messages
         session["past_messages"] = past_messages
         return render_template('chat.html', messages=all_messages,mode="メンタモード")
@@ -258,8 +258,8 @@ def chat_english():
 
         all_messages.append(message)
         all_messages.append(response)
-        print(message,response)
-        print(past_messages)
+        # print(message,response)
+        # print(past_messages)
         session["all_messages"] = all_messages
         session["past_messages"] = past_messages
         return render_template('chat.html', messages=all_messages,mode="英語添削モード")
@@ -292,8 +292,8 @@ def chat_japanese():
 
         all_messages.append(message)
         all_messages.append(response)
-        print(message,response)
-        print(past_messages)
+        # print(message,response)
+        # print(past_messages)
         session["all_messages"] = all_messages
         session["past_messages"] = past_messages
         return render_template('chat.html', messages=all_messages,mode="日本語添削モード")
