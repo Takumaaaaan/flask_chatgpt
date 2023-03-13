@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+  <div class="row d-flex justify-content-center">
+    <p class="mode">{{mode}}</p>
+    <div class="col-md-12 col-lg-12 col-xl-12">
+      <div class="card" id="chat1">
+        <div class="card-header d-flex justify-content-between align-items-center p-3 bg-info text-white border-bottom-0">
+          <i class="fas fa-angle-left"></i>
+          <p class="mb-0 fw-bold chat_title">チートイGPT (ChatGPT)</p>
+          <i class="fas fa-times"></i>
+        </div>
+        <div class="card-body">
+
+          <div class="d-flex flex-row justify-content-start mb-4">
+            <img src="/static/yiso.png" alt="avatar 1" class="icon">
+            <div class="p-3 ms-3 gpt_message">
+              <p class="middle mb-0">翻訳したいことを入力してください</p>
+            </div>
+          </div>
+          {% for message in messages %}
+          {% if loop.index % 2 == 1  %}
+          <div class="d-flex flex-row justify-content-end mb-4">
+            <div class="p-3 me-3 border user_message">
+              <p class="middle mb-0">{{message|safe}}</p>
+            </div>
+          </div>
+          {% else %}
+          <div class="d-flex flex-row justify-content-start mb-4">
+            <img src="/static/yiso.png" alt="avatar 1" class="icon">
+            <div class="p-3 ms-3 gpt_message">
+              <p class="middle mb-0">{{message|safe}}</p>
+            </div>
+          </div>
+          {% endif %}
+          {% endfor %}
+
+          <form action="" method="POST">
+            <label for="textArea">入力</label>
+            <textarea class="form-control" id="textArea" name="message" rows="6" ></textarea>
+          
+            <div class="parent-box flex-box-between">
+              <a href="/reload_translate/" class="btn btn-danger align-left">履歴消去</a>
+              <button type="submit" class="btn btn-primary align-right">送信</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
