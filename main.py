@@ -1,13 +1,19 @@
-from flask import Flask, render_template, jsonify, request, session, redirect
+from flask import Flask, render_template, jsonify, request, session, redirect,send_file
 from datetime import timedelta
+# ファイル名をチェックする関数
+from werkzeug.utils import secure_filename
 import openai
 import deepl
+import shutil
 from dotenv import load_dotenv
 import os
 load_dotenv()
 
 #Flaskの設定
 app = Flask(__name__, static_folder='./static')
+UPLOAD_FOLDER = 'temp'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 """
 環境変数の設定
 """
@@ -56,13 +62,46 @@ def translate_text(text:str,target_lang:str):
     print(text)
     print(target_lang)
     result = translator.translate_text(text=text,target_lang=target_lang)
-    
     return result.text
+
+def tranlate_document():
+    files = os.listdir(UPLOAD_FOLDER)
+    for file in files:
+        if "english" in file:
+            break
+    input_path = UPLOAD_FOLDER + "/" + file
+    extension = file.rsplit('.', 1)[1].lower()
+    output_path =  UPLOAD_FOLDER + "/" + "japanese." + extension
+    if os.getenv("HTTP_PROXY"):
+        translator = deepl.Translator(DEEPL_API_KEY,proxy=os.environ['https_proxy'])
+    else:
+        translator = deepl.Translator(DEEPL_API_KEY)
+    try:
+        # Using translate_document_from_filepath() with file paths 
+        translator.translate_document_from_filepath(
+            input_path,
+            output_path,
+            target_lang="JA"
+        )
+
+    except deepl.DocumentTranslationException as error:
+        # If an error occurs during document translation after the document was
+        # already uploaded, a DocumentTranslationException is raised. The
+        # document_handle property contains the document handle that may be used to
+        # later retrieve the document from the server, or contact DeepL support.
+        doc_id = error.document_handle.id
+        doc_key = error.document_handle.key
+        print(f"Error after uploading ${error}, id: ${doc_id} key: ${doc_key}")
+    except deepl.DeepLException as error:
+        # Errors during upload raise a DeepLException
+        print(error)
+    
+    return output_path
+
 
 """
 翻訳のルータ
 """
-
 @app.route('/reload_translate/', methods=['GET'])
 def reload_translate():
     if "all_translates" in session:
@@ -96,6 +135,31 @@ def tranlate():
         session["all_translates"] = all_translates
 
         return render_template('translate.html', messages=all_translates,mode="翻訳モード")
+
+
+@app.route('/translate_file/', methods=['GET','POST'])
+def translate_file():
+    if request.method == 'GET':
+        return render_template('translate_file.html',mode="ファイル翻訳モード")
+    # リクエストがポストかどうかの判別
+    if request.method == 'POST':
+        # ファイルがなかった場合の処理
+        if 'file' not in request.files:
+            return redirect(request.url)
+        # データの取り出し
+        file = request.files['file']
+        # ファイル名がなかった時の処理
+        if file.filename == '':
+            return redirect(request.url)
+        
+        # 危険な文字を削除（サニタイズ処理）
+        filename = secure_filename(file.filename)
+        extension = filename.rsplit('.', 1)[1].lower()
+        # ファイルの保存
+        file.save(os.path.join(UPLOAD_FOLDER, "english." + extension))
+        output = tranlate_document()
+        
+        return send_file(output, as_attachment = True)
 
 
 """

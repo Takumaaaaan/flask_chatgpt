@@ -16,7 +16,10 @@
           <div class="d-flex flex-row justify-content-start mb-4">
             <img src="/static/yiso.png" alt="avatar 1" class="icon">
             <div class="p-3 ms-3 gpt_message">
-              <p class="middle mb-0">相談したいことを入力してください</p>
+              <p class="middle mb-0">日本語に翻訳したいファイルを選択してください
+                <br>※精度が微妙で見栄えが崩れがちです。
+              <br>対応フォーマット一覧：.pptx .docx .pdf .txt .html
+            </p>
             </div>
           </div>
           {% for message in messages %}
@@ -35,15 +38,13 @@
           </div>
           {% endif %}
           {% endfor %}
-
-          <form action="" method="POST">
-            <label for="textArea">入力</label>
-            <textarea class="form-control" id="textArea" name="message" rows="6" ></textarea>
           
-            <div class="parent-box flex-box-between">
-              <a href="/reload/" class="btn btn-danger align-left">履歴消去</a>
+          <form action="" method="POST" enctype="multipart/form-data">
+            <div class="parent-box flex-box">
+              <label for="file">→</label>
+              <input id="file" type="file" name="file">
               <button type="submit" class="btn btn-primary align-right">送信</button>
-            </div>
+          </div>
           </form>
         </div>
       </div>
