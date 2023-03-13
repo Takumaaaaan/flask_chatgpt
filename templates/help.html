@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+  <div class="row d-flex justify-content-center">
+    <p class="mode">{{mode}}</p>
+    <div class="col-md-12 col-lg-12 col-xl-12">
+      <div class="card" id="chat1">
+        <div class="card-header d-flex justify-content-between align-items-center p-3 bg-info text-white border-bottom-0">
+          <i class="fas fa-angle-left"></i>
+          <p class="mb-0 fw-bold chat_title">チートイ(ChatGPT+DeepL)</p>
+          <i class="fas fa-times"></i>
+        </div>
+        <div class="card-body">
+
+          <div class="d-flex flex-row justify-content-start mb-4">
+            <img src="/static/yiso.png" alt="avatar 1" class="icon">
+            <div class="p-3 ms-3 gpt_message">
+              <p class="middle mb-0 help_text">
+                ChatGPTのtips<br>
+                1.羅列して欲しいとき  「箇条書きで○個挙げてください」<br>
+                2.わかりやすくしたいとき その1 「〜を博士と弟子の会話形式で教えてください。」<br>
+                3.わかりやすくしたいとき その2 「〜をタメ口で小学生でもわかるように教えてください。」<br>
+                4.要約して欲しいとき 「以下の文章を○文字程度で要約してください。~~」<br>
+                5.話のジャンルが変わるときは→履歴消去で新規チャットからやり直す<br>
+                6.1回の回答で満足せず、何回か聞き直してみる 「本当にそうですか」「他にありませんか」等<br>
+                <br><br>
+                ChatGPTの利用例<br>
+                1.メールの文面考案<br>
+                2.文章の要約<br>
+                3.文章の添削<br>
+                4.調べ物<br>
+                5.類義語・言い換えを聞く<br>
+                6.プログラムを書いてもらう<br>
+                7.プレゼンの想定質問を出してもらう<br>
+
+                <br><br>
+                メンタ・英語添削・日本語添削モードについて<br>
+                ・ChatGPTにあらかじめ設定を入力することができます。<br>
+                ・例えばメンタの場合は、「親身に相談に乗ってモチベをあげてください」という設定です。<br>
+                ・英語添削の場合は「あなたはプロの英語講師です」的な設定をしています。<br>
+                ・日本語添削の場合は「あなたはプロの編集者です」的な設定をしています。<br>
+                ・試してみると悪くはなかったですが、そこまで頻繁にも使わないです。<br>
+                <br><br>
+                翻訳モードについて<br>
+                ・DeepLのAPIを活用しています。<br>
+                ・日本語を入力すると英語にします。<br>
+                ・英語を入力すると日本語にします。<br>
+                ・入力データはDeepLのモデル学習には使われません。<br>
+                ・チャット風のUIでコピペとか若干しにくいと思います。ごめんなさい
+
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

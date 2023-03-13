@@ -114,16 +114,15 @@ def reload_translate():
 def tranlate():
     if "all_translates" not in session:
         session["all_translates"] = []
-
+    all_translates = session["all_translates"]
     if request.method == "GET":
-        return render_template('translate.html',mode="翻訳モード")
+        return render_template('translate.html', messages=all_translates,mode="翻訳モード")
     
     elif request.method == "POST":
-        
         all_translates = session["all_translates"]
         message = request.form['message']
         if message is None:
-            return render_template('translate.html',mode="翻訳モード")
+            return render_template('translate.html', messages=all_translates,mode="翻訳モード")
 
         english_flag = message.encode('utf-8').isalpha()
         if english_flag:
@@ -298,6 +297,10 @@ def chat_japanese():
         session["all_messages"] = all_messages
         session["past_messages"] = past_messages
         return render_template('chat.html', messages=all_messages,mode="日本語添削モード")
+    
+@app.route('/help/', methods=['GET'])
+def help():
+    return render_template('help.html')
 
 @app.route('/', methods=['GET'])
 def toppage():

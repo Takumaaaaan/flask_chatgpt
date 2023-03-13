@@ -21,6 +21,10 @@
     padding: 0;
   }
 
+  .help_text{
+    font-size: 22px;
+  }
+
 .icon{
   width: 45px; height: 100%;
 }
