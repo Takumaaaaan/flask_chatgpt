@@ -129,10 +129,12 @@ def tranlate():
             response = translate_text(text=message,target_lang="JA")
         else:
             response = translate_text(text=message,target_lang="EN-US")
+        response = response.strip().replace("\n","<br>\n")
+        message = message.strip().replace("\n","<br>\n")
         all_translates.append(message)
         all_translates.append(response)
         session["all_translates"] = all_translates
-
+        print(response)
         return render_template('translate.html', messages=all_translates,mode="翻訳モード")
 
 
