@@ -4,7 +4,6 @@ from datetime import timedelta
 from werkzeug.utils import secure_filename
 import openai
 import deepl
-import shutil
 from dotenv import load_dotenv
 import os
 load_dotenv()
@@ -30,7 +29,7 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 DEEPL_API_KEY = os.environ["DEEPL_API_KEY"]
 
 """
-チャットの設定
+チャット関数
 """
 def completion(new_message_text:str, settings_text:str = '', past_messages:list = []):
     openai.api_key = API_KEY
@@ -51,8 +50,9 @@ def completion(new_message_text:str, settings_text:str = '', past_messages:list 
     response_message_text = result.choices[0].message.content
     
     return response_message_text, past_messages
+
 """
-翻訳の設定
+翻訳の関数(translate_documentは使わない)
 """
 def translate_text(text:str,target_lang:str):
     if os.getenv("HTTP_PROXY"):
@@ -100,7 +100,7 @@ def tranlate_document():
 
 
 """
-翻訳のルータ
+翻訳のルータ(translate_fileは使わない)
 """
 @app.route('/reload_translate/', methods=['GET'])
 def reload_translate():
@@ -297,15 +297,24 @@ def chat_japanese():
         session["all_messages"] = all_messages
         session["past_messages"] = past_messages
         return render_template('chat.html', messages=all_messages,mode="日本語添削モード")
-    
+
+"""
+使い方のルータの設定
+"""
 @app.route('/help/', methods=['GET'])
 def help():
     return render_template('help.html')
 
+"""
+ホームの設定(chatに飛ばす)
+"""
 @app.route('/', methods=['GET'])
 def toppage():
     return redirect("/chat/")
 
+"""
+main(portは適当)
+"""
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5003)
 
