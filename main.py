@@ -31,7 +31,7 @@ DEEPL_API_KEY = os.environ["DEEPL_API_KEY"]
 """
 チャット関数
 """
-def completion(new_message_text:str, settings_text:str = '', past_messages:list = []):
+def completion(new_message_text:str, settings_text:str = '', past_messages:list = [],mode:str = "gpt-3.5-turbo"):
     openai.api_key = API_KEY
     print(settings_text)
     if len(past_messages) == 0 and len(settings_text) != 0:
@@ -41,7 +41,7 @@ def completion(new_message_text:str, settings_text:str = '', past_messages:list 
     past_messages.append(new_message)
 
     result = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model=mode, #"gpt-3.5-turbo",
         messages=past_messages
     )
     response_message = {"role": "assistant", "content": result.choices[0].message.content}
@@ -299,6 +299,33 @@ def chat_japanese():
         session["all_messages"] = all_messages
         session["past_messages"] = past_messages
         return render_template('chat.html', messages=all_messages,mode="日本語添削モード")
+    
+@app.route('/chat_gpt4/', methods=['GET',"POST"])
+def chat_gpt4():
+    if "all_messages" not in session:
+        session["all_messages"] = []
+    if "past_messages" not in session:
+        session["past_messages"] = []
+
+    if request.method == "GET":
+        return render_template('gpt4.html',mode="GPT4モード")
+    
+    elif request.method == "POST":
+        all_messages = session["all_messages"]
+        past_messages = session["past_messages"]
+        message = request.form['message']
+        response,past_messages = completion(message,settings_text="",past_messages=past_messages,mode="gpt-4")
+
+        response = response.strip().replace("\n","<br>\n")
+        message = message.strip().replace("\n","<br>\n")
+
+        all_messages.append(message)    
+        all_messages.append(response)
+        # print(message,response)
+        # print(past_messages)
+        session["all_messages"] = all_messages
+        session["past_messages"] = past_messages
+        return render_template('gpt4.html', messages=all_messages,mode="GPT4モード")
 
 """
 使い方のルータの設定
